@@ -1,0 +1,47 @@
+.slider-container {
+  perspective: 1000px;
+}
+
+.nav-link {
+  position: relative;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #e6b64e;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link:hover {
+  color: #e6b64e;
+}
+
+.solid-nav {
+  background-color: #0d2f3b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s ease;
+}
+
+/* Animation for page turn effect */
+@keyframes pageTurn {
+  0%, 20% { opacity: 1; transform: rotateY(0deg); }
+  25%, 45% { opacity: 0.8; transform: rotateY(90deg); }
+  50%, 70% { opacity: 1; transform: rotateY(0deg); }
+  75%, 95% { opacity: 0.8; transform: rotateY(90deg); }
+  100% { opacity: 1; transform: rotateY(0deg); }
+}
+
+.animate-page-turn {
+  animation: pageTurn 8s infinite;
+}
