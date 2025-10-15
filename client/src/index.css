@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🌊 Floating animation (for icons, logos, etc.) */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 🧭 Hide scrollbar (clean look for parallax sites) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}
+
+/* 🪄 Smooth scroll behavior for anchor links */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem; /* adjust to your navbar height (≈96px) */
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ✨ Global transition for hover / color / layout changes */
+* {
+  transition-property: background-color, color, border-color, transform, opacity, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Optional: smooth fade for route or section changes */
+section {
+  scroll-margin-top: 7rem; /* ensures headings don’t hide behind navbar */
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+

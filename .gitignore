@@ -1,0 +1,64 @@
+# ===========================================
+# PYTHON / DJANGO
+# ===========================================
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+*.py[cod]
+*.mo
+*.so
+.DS_Store
+.idea/
+.vscode/
+*.bak
+*.old
+*.orig
+
+# Django specific
+/staticfiles/
+/media/
+/*.log
+.env
+*.env
+*.json
+/secrets.json
+
+# ===========================================
+# ENVIRONMENTS
+# ===========================================
+venv/
+env/
+*/venv/
+*/env/
+aj_venv/
+.venv/
+
+# ===========================================
+# FRONTEND (Vite / React)
+# ===========================================
+client/node_modules/
+client/dist/
+client/build/
+client/.env
+client/.DS_Store
+client/package-lock.json
+
+# ===========================================
+# SYSTEM FILES
+# ===========================================
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# ===========================================
+# BACKUPS / MISC
+# ===========================================
+*.old
+*.orig
