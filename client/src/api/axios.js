@@ -1,7 +1,11 @@
 // src/api/axios.js
 import axios from "axios";
 
-export const baseURL = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
+// pick correct base URL from Vite envs (no trailing slash)
+export const baseURL = (import.meta.env.DEV
+  ? import.meta.env.VITE_API_BASE_URL_LOCAL
+  : import.meta.env.VITE_API_BASE_URL_PROD
+).replace(/\/+$/, "");
 
 const api = axios.create({
   baseURL,
@@ -37,7 +41,6 @@ api.interceptors.response.use(
     const isAdminCall = (original?.url || "").includes("/api/admin/");
     const refresh = localStorage.getItem("refresh");
 
-    // Normalize error
     const detail =
       err?.response?.data?.detail ||
       err?.response?.data?.message ||
@@ -46,12 +49,10 @@ api.interceptors.response.use(
     const wrapped = new Error(detail);
     wrapped.status = status;
 
-    // Only try refresh if 401, admin call, has refresh, and not already retried
     if (status === 401 && isAdminCall && refresh && !original._retry) {
       original._retry = true;
 
       if (isRefreshing) {
-        // wait for current refresh
         return new Promise((resolve, reject) => {
           pending.push({
             resolve: (newToken) => {
@@ -79,7 +80,6 @@ api.interceptors.response.use(
         processQueue(refreshErr, null);
         localStorage.removeItem("token");
         localStorage.removeItem("refresh");
-        // send them to login
         if (typeof window !== "undefined") window.location.href = "/login";
         return Promise.reject(wrapped);
       } finally {
@@ -87,7 +87,6 @@ api.interceptors.response.use(
       }
     }
 
-    // If 401 for non-admin calls, or no refresh → just bubble up
     return Promise.reject(wrapped);
   }
 );
