@@ -50,3 +50,20 @@ class JourneyEntryViewSet(viewsets.ModelViewSet):
     queryset = JourneyEntry.objects.all().order_by("order","id")
     serializer_class = JourneyEntrySerializer
     permission_classes = [ReadOnlyOrStaffWrite]
+
+
+from rest_framework import generics, viewsets, permissions
+from .models import NewsItem
+from .serializers import NewsItemSerializer
+
+# Public list (homepage or news section)
+class NewsList(generics.ListAPIView):
+    queryset = NewsItem.objects.filter(is_active=True).order_by("order")
+    serializer_class = NewsItemSerializer
+    permission_classes = [permissions.AllowAny]
+
+# Admin manage (CRUD)
+class NewsItemViewSet(viewsets.ModelViewSet):
+    queryset = NewsItem.objects.all()
+    serializer_class = NewsItemSerializer
+    permission_classes = [permissions.IsAuthenticated]

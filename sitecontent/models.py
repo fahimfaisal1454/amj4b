@@ -89,3 +89,21 @@ class JourneyEntry(models.Model):
         ordering = ("order", "id")
     def __str__(self):
         return f"{self.year}: {self.text[:40]}…"
+
+from django.db import models
+
+class NewsItem(models.Model):
+    tag = models.CharField(max_length=40, default="NEWS", blank=True)
+    tag_color = models.CharField(max_length=40, blank=True)  # example: "bg-purple-600 text-white"
+    title = models.CharField(max_length=200)
+    body = models.TextField(blank=True)
+    image = models.ImageField(upload_to="news/")
+    published_at = models.DateField(null=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("order", "-published_at", "-id")
+
+    def __str__(self):
+        return self.title

@@ -54,3 +54,13 @@ class JourneyEntryAdmin(admin.ModelAdmin):
     list_display = ("year","about","order","is_active")
     list_filter = ("about","is_active")
     search_fields = ("year","text")
+
+from django.contrib import admin
+from .models import NewsItem
+
+@admin.register(NewsItem)
+class NewsItemAdmin(admin.ModelAdmin):
+    list_display = ("title", "tag", "published_at", "is_active", "order")
+    list_filter = ("is_active", "tag")
+    search_fields = ("title", "body")
+    ordering = ("order",)
