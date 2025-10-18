@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -63,4 +63,19 @@ class NewsItemAdmin(admin.ModelAdmin):
     list_display = ("title", "tag", "published_at", "is_active", "order")
     list_filter = ("is_active", "tag")
     search_fields = ("title", "body")
+    ordering = ("order",)
+
+@admin.register(Program)
+class ProgramAdmin(admin.ModelAdmin):
+    list_display = ("title", "tag", "order", "is_active")
+    list_filter = ("is_active", "tag")
+    search_fields = ("title", "desc", "body")
+    ordering = ("order",)
+    
+    
+@admin.register(Story)
+class StoryAdmin(admin.ModelAdmin):
+    list_display = ("title", "tag", "order", "is_active")
+    list_filter  = ("is_active", "tag")
+    search_fields = ("title", "desc", "body")
     ordering = ("order",)

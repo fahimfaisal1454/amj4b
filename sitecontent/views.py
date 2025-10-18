@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story
 from .serializers import (
     BannerSerializer, AboutSectionSerializer,
-    WhatWeDoItemSerializer, JourneyEntrySerializer
+    WhatWeDoItemSerializer, JourneyEntrySerializer, ProgramSerializer, StorySerializer
 )
 from .permissions import ReadOnlyOrStaffWrite
 
@@ -67,3 +67,16 @@ class NewsItemViewSet(viewsets.ModelViewSet):
     queryset = NewsItem.objects.all()
     serializer_class = NewsItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class ProgramListView(generics.ListAPIView):
+    queryset = Program.objects.filter(is_active=True).order_by("order", "id")
+    serializer_class = ProgramSerializer
+    permission_classes = [permissions.AllowAny]
+    
+class StoryList(generics.ListAPIView):
+    serializer_class = StorySerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Story.objects.filter(is_active=True).order_by("order", "id")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program,  Story
 
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +32,14 @@ class NewsItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsItem
         fields = "__all__"
+
+class ProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = "__all__"
+        
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = "__all__"
+        

@@ -107,3 +107,34 @@ class NewsItem(models.Model):
 
     def __str__(self):
         return self.title
+
+class Program(models.Model):
+    tag = models.CharField(max_length=40)  # EDUCATION / HEALTH / etc.
+    tag_color = models.CharField(max_length=40, blank=True)  # e.g. "bg-green-500 text-white"
+    title = models.CharField(max_length=120)
+    desc = models.TextField()
+    body = models.TextField(blank=True)
+    image = models.ImageField(upload_to="programs/")  # Image at the top of each card
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "Program"
+        verbose_name_plural = "Programs"
+
+    def __str__(self):
+        return self.title
+    
+class Story(models.Model):
+    tag = models.CharField(max_length=40, default="STORY")
+    tag_color = models.CharField(max_length=40, blank=True)
+    title = models.CharField(max_length=160)
+    desc = models.TextField()
+    body = models.TextField(blank=True)
+    image = models.ImageField(upload_to="stories/")
+    href = models.CharField(max_length=200, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
