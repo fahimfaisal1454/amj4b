@@ -7,7 +7,6 @@ class BannerAdmin(admin.ModelAdmin):
     list_editable = ("order", "is_active")
     search_fields = ("title", "caption")
 
-
 class WhatWeDoItemInline(admin.TabularInline):
     model = WhatWeDoItem
     extra = 1

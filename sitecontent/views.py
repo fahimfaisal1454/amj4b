@@ -61,7 +61,7 @@ class NewsList(generics.ListAPIView):
     queryset = NewsItem.objects.filter(is_active=True).order_by("order")
     serializer_class = NewsItemSerializer
     permission_classes = [permissions.AllowAny]
-
+    parser_classes = [MultiPartParser, FormParser]
 # Admin manage (CRUD)
 class NewsItemViewSet(viewsets.ModelViewSet):
     queryset = NewsItem.objects.all()
@@ -73,7 +73,7 @@ class ProgramListView(generics.ListAPIView):
     queryset = Program.objects.filter(is_active=True).order_by("order", "id")
     serializer_class = ProgramSerializer
     permission_classes = [permissions.AllowAny]
-    
+    parser_classes = [MultiPartParser, FormParser]
 class StoryList(generics.ListAPIView):
     serializer_class = StorySerializer
     permission_classes = [permissions.AllowAny]
