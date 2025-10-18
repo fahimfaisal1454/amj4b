@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     BannerViewSet,
     AboutPublic, AboutSectionViewSet,
-    WhatWeDoItemViewSet, JourneyEntryViewSet, NewsList, NewsItemViewSet, ProgramListView, StoryList, 
+    WhatWeDoItemViewSet, JourneyEntryViewSet, NewsList, NewsItemViewSet, ProgramListView, StoryList, ContactMessageCreate, ContactInfoView
 )
 
 router = DefaultRouter()
@@ -19,4 +19,6 @@ urlpatterns = [
     path("news/", NewsList.as_view(), name="news-list"),
     path("programs/", ProgramListView.as_view(), name="programs-list"),
     path("stories/", StoryList.as_view(), name="stories-list"),
+    path("contact/", ContactMessageCreate.as_view(), name="contact-create"),
+    path("contact-info/", ContactInfoView.as_view(), name="contact-info"),
 ]

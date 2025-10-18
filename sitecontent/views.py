@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo
 from .serializers import (
     BannerSerializer, AboutSectionSerializer,
-    WhatWeDoItemSerializer, JourneyEntrySerializer, ProgramSerializer, StorySerializer
+    WhatWeDoItemSerializer, JourneyEntrySerializer, ProgramSerializer, StorySerializer, ContactMessageSerializer, ContactInfoSerializer
 )
 from .permissions import ReadOnlyOrStaffWrite
 
@@ -80,3 +80,17 @@ class StoryList(generics.ListAPIView):
 
     def get_queryset(self):
         return Story.objects.filter(is_active=True).order_by("order", "id")
+    
+
+# POST from frontend contact form
+class ContactMessageCreate(generics.CreateAPIView):
+    serializer_class = ContactMessageSerializer
+    permission_classes = [permissions.AllowAny]
+
+# GET for frontend contact info (email, phone, etc.)
+class ContactInfoView(generics.RetrieveAPIView):
+    serializer_class = ContactInfoSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        return ContactInfo.objects.first()  # one record only

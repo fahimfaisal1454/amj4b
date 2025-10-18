@@ -138,3 +138,33 @@ class Story(models.Model):
     href = models.CharField(max_length=200, blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    phone = models.CharField(max_length=64, blank=True, default="")
+    subject = models.CharField(max_length=160, blank=True, default="")
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created_at", "-id")
+
+    def __str__(self):
+        return f"{self.name} <{self.email}> — {self.subject or 'No subject'}"
+
+
+class ContactInfo(models.Model):
+    email = models.EmailField(blank=True, default="")
+    phone = models.CharField(max_length=64, blank=True, default="")
+    address = models.CharField(max_length=255, blank=True, default="")
+    hours = models.CharField(max_length=128, blank=True, default="")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Contact Info"
+        verbose_name_plural = "Contact Info"
+
+    def __str__(self):
+        return "Contact Info"

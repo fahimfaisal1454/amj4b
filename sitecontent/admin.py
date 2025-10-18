@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -79,3 +79,17 @@ class StoryAdmin(admin.ModelAdmin):
     list_filter  = ("is_active", "tag")
     search_fields = ("title", "desc", "body")
     ordering = ("order",)
+    
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "subject", "created_at")
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("created_at",)
+    ordering = ("-created_at",)
+
+@admin.register(ContactInfo)
+class ContactInfoAdmin(admin.ModelAdmin):
+    list_display = ("email", "phone", "address", "updated_at")
+    readonly_fields = ("updated_at",)
+    
+    

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program,  Story
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program,  Story, ContactMessage, ContactInfo
 
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +43,13 @@ class StorySerializer(serializers.ModelSerializer):
         model = Story
         fields = "__all__"
         
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = "__all__"
+
+class ContactInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactInfo
+        fields = "__all__"
