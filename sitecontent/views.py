@@ -73,7 +73,13 @@ class ProgramListView(generics.ListAPIView):
     queryset = Program.objects.filter(is_active=True).order_by("order", "id")
     serializer_class = ProgramSerializer
     permission_classes = [permissions.AllowAny]
+
+class ProgramViewSet(viewsets.ModelViewSet):
+    queryset = Program.objects.all().order_by("order", "id")
+    serializer_class = ProgramSerializer
+    permission_classes = [permissions.IsAuthenticated]  # consistent with News manage
     parser_classes = [MultiPartParser, FormParser]
+    
 class StoryList(generics.ListAPIView):
     serializer_class = StorySerializer
     permission_classes = [permissions.AllowAny]
@@ -81,16 +87,37 @@ class StoryList(generics.ListAPIView):
     def get_queryset(self):
         return Story.objects.filter(is_active=True).order_by("order", "id")
     
-
+class StoryViewSet(viewsets.ModelViewSet):
+    queryset = Story.objects.all().order_by("order", "id")
+    serializer_class = StorySerializer
+    permission_classes = [permissions.IsAuthenticated]  # or ReadOnlyOrStaffWrite
+    parser_classes = [MultiPartParser, FormParser]
+    
 # POST from frontend contact form
-class ContactMessageCreate(generics.CreateAPIView):
+class ContactMessageListCreate(generics.ListCreateAPIView):
+    """
+    GET  /api/contact/   -> list messages (admins only)
+    POST /api/contact/   -> create a message (public)
+    """
+    queryset = ContactMessage.objects.all().order_by("-created_at")
     serializer_class = ContactMessageSerializer
-    permission_classes = [permissions.AllowAny]
 
-# GET for frontend contact info (email, phone, etc.)
+    # Different permissions per method
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
+    
+    
 class ContactInfoView(generics.RetrieveAPIView):
     serializer_class = ContactInfoSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_object(self):
         return ContactInfo.objects.first()  # one record only
+    
+class ContactInfoViewSet(viewsets.ModelViewSet):
+    queryset = ContactInfo.objects.all().order_by("id")
+    serializer_class = ContactInfoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
