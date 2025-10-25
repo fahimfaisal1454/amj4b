@@ -1,12 +1,13 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo, EventCategory, Event, EventPhoto
 from .serializers import (
     BannerSerializer, AboutSectionSerializer,
-    WhatWeDoItemSerializer, JourneyEntrySerializer, ProgramSerializer, StorySerializer, ContactMessageSerializer, ContactInfoSerializer
+    WhatWeDoItemSerializer, JourneyEntrySerializer, ProgramSerializer, StorySerializer, ContactMessageSerializer, ContactInfoSerializer,
+    EventCategorySerializer, EventSerializer, EventPhotoSerializer
 )
 from .permissions import ReadOnlyOrStaffWrite
 
@@ -121,3 +122,54 @@ class ContactInfoViewSet(viewsets.ModelViewSet):
     serializer_class = ContactInfoSerializer
     permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+
+
+#--- Event Categories and Events ---
+
+# Public: categories with their active events and photos
+class EventCategoriesPublic(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = EventCategorySerializer
+
+    def get_queryset(self):
+        # Only active categories → only active events → only active photos (handled by serializer data)
+        # Keep it simple here: return active categories; nested relations are read-only
+        return EventCategory.objects.filter(is_active=True).order_by("order", "name")
+
+# Public: flat list of active events (useful for filtering by year or category on frontend)
+class EventsPublic(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        qs = Event.objects.filter(is_active=True).order_by("order", "year", "title")
+        cat = self.request.query_params.get("category")
+        year = self.request.query_params.get("year")
+        if cat:
+            qs = qs.filter(category__slug=cat) | qs.filter(category__id__iexact=cat)
+        if year:
+            qs = qs.filter(year=year)
+        return qs
+
+# Manage (JWT required)
+class EventCategoryViewSet(viewsets.ModelViewSet):
+    queryset = EventCategory.objects.all().order_by("order", "name")
+    serializer_class = EventCategorySerializer
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all().order_by("order", "year", "title")
+    serializer_class = EventSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
+
+class EventPhotoViewSet(viewsets.ModelViewSet):
+    queryset = EventPhoto.objects.all().order_by("order", "id")
+    serializer_class = EventPhotoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
+    
+class EventPublicDetail(generics.RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = EventSerializer
+    queryset = Event.objects.filter(is_active=True) 

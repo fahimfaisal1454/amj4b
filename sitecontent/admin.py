@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program, Story, ContactMessage, ContactInfo, EventCategory, Event, EventPhoto
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -92,3 +92,30 @@ class ContactInfoAdmin(admin.ModelAdmin):
     readonly_fields = ("updated_at",)
     
     
+    
+#---------------------------------------------------
+
+@admin.register(EventCategory)
+class EventCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "order", "is_active")
+    list_editable = ("order", "is_active")
+    prepopulated_fields = {"slug": ("name",)}
+    search_fields = ("name",)
+
+class EventPhotoInline(admin.TabularInline):
+    model = EventPhoto
+    extra = 1
+    fields = ("image", "caption", "order", "is_active")
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ("title", "category", "year", "order", "is_active")
+    list_filter = ("category", "year", "is_active")
+    search_fields = ("title", "description")
+    inlines = [EventPhotoInline]
+
+@admin.register(EventPhoto)
+class EventPhotoAdmin(admin.ModelAdmin):
+    list_display = ("event", "order", "is_active", "uploaded_at")
+    list_filter = ("event", "is_active")
+    search_fields = ("caption",)

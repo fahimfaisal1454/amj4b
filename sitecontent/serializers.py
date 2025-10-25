@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program,  Story, ContactMessage, ContactInfo
+from .models import Banner, AboutSection, WhatWeDoItem, JourneyEntry, Program,  Story, ContactMessage, ContactInfo, EventCategory, Event, EventPhoto
 
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,4 +52,26 @@ class ContactMessageSerializer(serializers.ModelSerializer):
 class ContactInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactInfo
+        fields = "__all__"
+        
+#---------------------------------------------------------
+
+class EventPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventPhoto
+        fields = "__all__"
+
+class EventSerializer(serializers.ModelSerializer):
+    photos = EventPhotoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Event
+        fields = "__all__"
+
+class EventCategorySerializer(serializers.ModelSerializer):
+    # For public response with nested events (each with nested photos)
+    events = EventSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = EventCategory
         fields = "__all__"

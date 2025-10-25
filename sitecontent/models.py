@@ -168,3 +168,50 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return "Contact Info"
+    
+#----------------------------------------------------------
+
+# --- EVENTS / GALLERY ---
+
+class EventCategory(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    slug = models.SlugField(max_length=150, unique=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("order", "name")
+
+    def __str__(self):
+        return self.name
+
+
+class Event(models.Model):
+    category = models.ForeignKey(EventCategory, related_name="events", on_delete=models.CASCADE)
+    title = models.CharField(max_length=160)                   # e.g., "Blood Donation"
+    year = models.CharField(max_length=10)                     # e.g., "2020", flexible string
+    date = models.DateField(blank=True, null=True)             # optional exact date
+    description = models.TextField(blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("order", "year", "title")
+
+    def __str__(self):
+        return f"{self.title} {self.year}".strip()
+
+
+class EventPhoto(models.Model):
+    event = models.ForeignKey(Event, related_name="photos", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="events/")
+    caption = models.CharField(max_length=200, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("order", "id")
+
+    def __str__(self):
+        return f"Photo #{self.id} of {self.event}"

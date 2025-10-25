@@ -22,6 +22,9 @@ from .views import (
 
     # contact messages (admin GET + public POST on same URL)
     ContactMessageListCreate,
+    #Events
+        EventCategoriesPublic, EventsPublic,
+    EventCategoryViewSet, EventViewSet, EventPhotoViewSet,EventPublicDetail
 )
 
 router = DefaultRouter()
@@ -37,6 +40,9 @@ router.register("programs/manage", ProgramViewSet, basename="programs-manage")
 router.register("stories/manage", StoryViewSet, basename="stories-manage")
 
 router.register("contact-info/manage", ContactInfoViewSet, basename="contactinfo-manage")
+router.register("events/categories", EventCategoryViewSet, basename="events-categories")
+router.register("events/items", EventViewSet, basename="events-items")
+router.register("events/photos", EventPhotoViewSet, basename="events-photos")
 
 urlpatterns = [
     # router-based manage endpoints
@@ -51,4 +57,7 @@ urlpatterns = [
 
     # contact messages: GET (admins) + POST (public) on the SAME URL
     path("contact/", ContactMessageListCreate.as_view(), name="contact-list-create"),
+    path("events/", EventsPublic.as_view(), name="events-public"),
+    path("events/categories/", EventCategoriesPublic.as_view(), name="events-categories-public"),
+    path("events/<int:pk>/", EventPublicDetail.as_view(), name="event-public-detail"),
 ]
